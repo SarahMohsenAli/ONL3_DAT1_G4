@@ -1,0 +1,185 @@
+(1)
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+import datetime as dt
+
+(2)
+
+df=pd.read_csv('/content/TrainRidesCleaned.csv')
+
+(3)
+
+print(df.shape)
+
+(4)
+
+df.head()
+
+(5)
+
+df.info()
+
+(6)
+
+df.isna().sum()
+
+(7)
+
+before=len(df)
+df=df.drop_duplicates().reset_index(drop=True)
+after=len(df)
+print("num of removed dublicates",str(before-after),"current rows",str(after))
+
+(8)
+
+if 'Date of Journey' in df.columns:
+  df['Date of Journey'] = pd.to_datetime(df['Date of Journey'], format='%d/%m/%Y')
+
+(9)
+
+if 'Date of Purchase' in df.columns:
+  df['Date of Purchase'] = pd.to_datetime(df['Date of Purchase'], format='%d/%m/%Y')
+
+(10)
+
+if "Railcard" in df.columns:
+  df["Railcard"] = df["Railcard"].fillna("don,t have")
+
+(11)
+
+if "Actual Arrival Time" in df.columns:
+  df["Actual Arrival Time"] = df["Actual Arrival Time"].fillna("Cancelled")
+
+(12)
+
+if "Reason for Delay" in df.columns:
+  df["Reason for Delay"] = df["Reason for Delay"].fillna("No delay")
+
+(13)
+
+plt.figure(figsize=(10,6))
+ax=df['Payment Method'].value_counts().plot(kind='bar', color=['blue' , 'green','red'])
+ax.set_xlabel('Payment Method')
+ax.set_ylabel('count')
+plt.show()
+
+(14)
+
+ax=df['Ticket Class'].value_counts().plot(kind='pie')
+ax.set_xlabel('Ticket Class')
+ax.set_ylabel('count')
+plt.show()
+
+(15)
+
+ax=df['Ticket Type'].value_counts().plot(kind='pie')
+ax.set_xlabel('Ticket Type')
+ax.set_ylabel('count')
+plt.show()
+
+(16)
+
+ax=df['Railcard'].value_counts().plot(kind='pie')
+ax.set_xlabel('Railcard')
+ax.set_ylabel('count')
+plt.show()
+
+(17)
+
+df.info()
+
+(18)
+
+df.head()
+
+(19)
+
+df['estimatied Duration']=df['Arrival Time']-df['Departure Time']
+
+(20)
+
+correlation_value = df['Time of Purchase'].corr(df['Arrival Time'])
+print(correlation_value)
+
+(21)
+plt.figure(figsize=(10, 6))
+
+df.groupby(["Arrival Destination", "Ticket Class"]).size().unstack().plot(
+    kind="bar",
+    stacked=True,
+    color=["#59AC77", "#FDAAAA"],
+    figsize=(10, 6)
+)
+
+plt.title("Arrival Destination des vs Ticket Class")
+plt.xlabel("")
+plt.ylabel("Count")
+
+plt.show()
+
+
+(22)
+
+plt.figure(figsize=(10, 6))
+
+df.groupby(["Journey Status", "Ticket Class"]).size().unstack().plot(
+    kind="bar",
+    stacked=True,
+    color=["#59AC77", "#FDAAAA", "#4C72B0", "#DD8452"],
+    figsize=(10, 6)
+)
+
+plt.title("Journey Status vs Ticket Class")
+plt.xlabel("Journey Status")
+plt.ylabel("Count")
+
+(23)
+
+plt.figure
+plt.boxplot(df['estimatied Duration'])
+plt.ylabel
+plt.show()
+
+(24)
+
+plt.figure()
+plt.boxplot(df['Price'])
+plt.ylabel('Price')
+plt.title('Boxplot of Price')
+plt.show()
+
+(25)
+
+df["Purchase Type"].value_counts()
+
+count = df["Purchase Type"].value_counts()
+plt.figure()
+bars = plt.bar(count.index , count.values)
+
+for bar in bars:
+    height = bar.get_height()
+    plt.text(bar.get_x() + (bar.get_width()) / 2 ,  # x position = center of bar
+            height + 10 ,                          # y position = bar hig
+            str(int(height)) ,
+            ha = "center"
+            )
+
+plt.title("Purchase Type")
+plt.xlabel("Purchase Type")
+plt.ylabel("Count")
+plt.xticks(rotation = 45 , ha = "right")
+plt.tight_layout()
+plt.show()
+
+(26)
+
+ax = top_10_rates.plot(kind = "bar" , color = 'salmon') # ["steelblue" , 'salmon']
+ax.set_title("Departure Station")
+ax.set_xlabel("Departure Station")
+ax.set_ylabel("Count")
+for bar in ax.patches:
+    height = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width() / 2., height + 10, str(int(height)), ha='center')
+plt.show()
